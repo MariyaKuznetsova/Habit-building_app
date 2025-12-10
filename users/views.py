@@ -1,11 +1,8 @@
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import CreateAPIView, ListAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import CreateAPIView
 
 from users.models import User
 
-from .serializers import UserSerializer
+from users.serializers import UserSerializer
 
 
 class UserCreateAPIView(CreateAPIView):
