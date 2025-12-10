@@ -6,9 +6,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from habits.models import Habit
-from habits.paginators import MyPagination
+from habits.paginators import HabitPagination
 from habits.serializers import HabitSerializer
-from habits.tasks import send_telegram
+from habits.tasks import send_telegram_bot, send_telegram
 from users.permissions import IsOwner
 
 
@@ -22,23 +22,15 @@ class HabitCreateAPIView(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        # habit = serializer.save()
-        # send_telegram.delay(habit.owner)
-
-    def get_period_for_task(self):
-        """Функция для получения периодичности выполнения привычки в днях"""
-        habit = Habit.objects.get(owner=self.request.user)
-        period = habit.period
-        return period
+        send_telegram.delay()
 
 
 class HabitListAPIView(generics.ListAPIView):
     """Контроллер по выводу списка привычек"""
 
-    serializer_class = HabitSerializer
     queryset = Habit.objects.all()
     permission_classes = (IsAuthenticated, IsOwner)
-    pagination_class = MyPagination
+    pagination_class = HabitPagination
 
 
 class HabitPublicListAPIView(generics.ListAPIView):

@@ -201,6 +201,6 @@ TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 CELERY_BEAT_SCHEDULE = {
     'send_telegram': {
         'task': 'habits.tasks.send_telegram',  # Путь к задаче
-        'schedule': timedelta(days=1),
+        'schedule': timedelta(minutes=1),
     },
 }
