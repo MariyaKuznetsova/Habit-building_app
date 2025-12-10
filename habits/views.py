@@ -1,14 +1,12 @@
-from django.db.migrations import serializer
-from rest_framework import generics, status, viewsets
-from rest_framework.generics import get_object_or_404
+from rest_framework import generics
+
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
+
 
 from habits.models import Habit
 from habits.paginators import HabitPagination
 from habits.serializers import HabitSerializer
-from habits.tasks import send_telegram_bot, send_telegram
+from habits.tasks import send_telegram
 from users.permissions import IsOwner
 
 
@@ -16,9 +14,7 @@ class HabitCreateAPIView(generics.CreateAPIView):
     """Контроллер по созданию привычки"""
 
     serializer_class = HabitSerializer
-    permission_classes = (
-        IsAuthenticated,
-    )
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -38,7 +34,6 @@ class HabitPublicListAPIView(generics.ListAPIView):
 
     serializer_class = HabitSerializer
     permission_classes = (IsAuthenticated,)
-
 
     def get_queryset(self):
         return Habit.objects.filter(public=True)
@@ -66,4 +61,3 @@ class HabitDestroyAPIView(generics.DestroyAPIView):
     serializer_class = HabitSerializer
     permission_classes = (IsAuthenticated, IsOwner)
     queryset = Habit.objects.all()
-

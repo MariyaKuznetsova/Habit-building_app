@@ -1,9 +1,5 @@
 import datetime
 
-import requests
-from django.contrib.messages.context_processors import messages
-
-from config import settings
 from celery import shared_task
 
 from habits.models import Habit
@@ -24,8 +20,3 @@ def send_telegram():
                 Время: {h.time}
             """
             send_telegram_bot(message, chat_id)
-
-
-
-
-

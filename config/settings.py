@@ -43,18 +43,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "rest_framework_simplejwt",
     "django_filters",
     "drf_yasg",
     "corsheaders",
     "django_celery_beat",
-
     "habits",
     "users",
-
-
 ]
 
 MIDDLEWARE = [
@@ -164,7 +160,7 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8000',
+    "http://localhost:8000",
     "https://read-and-write.example.com",
 ]
 
@@ -199,8 +195,8 @@ TELEGRAM_URL = "https://api.telegram.org/bot"
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
 CELERY_BEAT_SCHEDULE = {
-    'send_telegram': {
-        'task': 'habits.tasks.send_telegram',  # Путь к задаче
-        'schedule': timedelta(minutes=1),
+    "send_telegram": {
+        "task": "habits.tasks.send_telegram",  # Путь к задаче
+        "schedule": timedelta(minutes=1),
     },
 }
