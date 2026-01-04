@@ -15,7 +15,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile
-        container_name: materials
+        container_name: materialskurs
         command:
             bash -c "python manage.py migrate && gunicorn config.wsgi:application --bind 0.0.0.0:8000"
         ports:
@@ -31,7 +31,7 @@ services:
 
     db:
         image: postgres:17
-        container_name: postgres_db
+        container_name: postgres_dbkurs
         env_file:
             - ./.env
         ports:
@@ -41,7 +41,7 @@ services:
 
     redis:
         image: redis:latest
-        container_name: redis
+        container_name: rediskurs
         ports:
             - "6379:6379"
         env_file:
@@ -51,7 +51,7 @@ services:
     celery:
         build:
             context: .
-        container_name: celery_worker
+        container_name: celery_workerkurs
         command:
             celery -A config worker -l INFO
         env_file:
@@ -65,7 +65,7 @@ services:
     celery_beat:
         build:
             context: .
-        container_name: celery_beat
+        container_name: celery_beatkurs
         command:
             celery -A config beat --loglevel=INFO
         env_file:
