@@ -211,3 +211,11 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
+# Настройки для тестового окружения
+if 'test' in sys.argv or os.getenv('GITHUB_ACTIONS') == 'true':
+    # Используем фиктивный бэкенд для Celery во время тестов
+    CELERY_BROKER_URL = 'memory://'
+    CELERY_RESULT_BACKEND = 'cache+memory://'
+    # Задачи выполняются синхронно, а не асинхронно
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_TASK_EAGER_PROPAGATES = True
