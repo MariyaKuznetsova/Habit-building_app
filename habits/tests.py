@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-
+from unittest.mock import patch
 
 from habits.models import Habit
 from users.models import User
@@ -37,11 +37,14 @@ class HabitTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(data.get("description"), self.habit.description)
 
-    def test_create_habit(self):
+    @patch('habits.tasks.send_telegram.delay')  # Мокаем задачу Celery
+    def test_create_habit(self, mock_send_telegram):
         """Тест создания привычки."""
+        mock_send_telegram.return_value = None  # Заглушка для Celery задачи
+
         url = reverse("habits:habit_create")
         data = {
-            "owner": 1,
+            "owner": self.user.id,  # Используй ID созданного пользователя
             "place": "Дома",
             "description": "Выпить стакан воды",
             "time": "0:00",
@@ -55,6 +58,9 @@ class HabitTestCase(APITestCase):
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Habit.objects.all().count(), 2)
+
+        # Проверяем, что задача была вызвана
+        mock_send_telegram.assert_called_once()
 
     def test_update_habit(self):
         """Тест обновления привычки."""
